@@ -24,9 +24,6 @@
         echo '<div class="message error">';
         echo '<ul>';
         switch ($firstError) {
-            case 'emptyfields':
-                echo '<li>Vui lòng điền đầy đủ tất cả các trường bắt buộc.</li>';
-                break;
             case 'passwordmismatch':
                 echo '<li>Mật khẩu xác nhận không khớp.</li>';
                 break;
@@ -50,6 +47,12 @@
                 break;
             case 'dbqueryfailed':
                 echo '<li>Đã xảy ra lỗi khi đăng ký. Vui lòng thử lại.</li>';
+                break;
+            case 'invalidreferrer':
+                echo '<li>Email người giới thiệu không tồn tại trong hệ thống.</li>';
+                break;
+            case 'invalidphoneformat':
+                echo '<li>Định dạng số điện thoại không hợp lệ. Vui lòng thử lại.</li>';
                 break;
             default:
                 echo '<li>Đã xảy ra lỗi không xác định.</li>';
