@@ -1,0 +1,5 @@
+# Bỏ qua tất cả nội dung trong thư mục uploads
+/uploads/*
+
+# Nhưng vẫn giữ thư mục uploads (vì Git không track thư mục trống)
+/uploads/.gitkeep

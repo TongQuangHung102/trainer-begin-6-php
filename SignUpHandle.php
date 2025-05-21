@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $avatar_path = null;
 
     if (isset($_FILES["avatar"]) && $_FILES["avatar"]["error"] == UPLOAD_ERR_OK) {
-        $target_dir = "../uploads/";
+        $target_dir = "uploads/";
         $target_file = $target_dir . basename($_FILES["avatar"]["name"]);
         $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 

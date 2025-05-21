@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="./css/reset.css">
     <link rel="stylesheet" href="./css/main.css">
     <title>Đăng ký tài khoản</title>
-    <style>
+    <!-- <style>
         .message {
             padding: 10px;
             margin-bottom: 15px;
@@ -26,7 +26,7 @@
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
-    </style>
+    </style> -->
 </head>
 
 <body>
