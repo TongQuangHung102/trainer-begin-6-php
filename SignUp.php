@@ -11,8 +11,8 @@
 </head>
 
 <body>
-    <h3>Đăng ký tài khoản</h3>
-
+    <h5>Đăng ký tài khoản</h5>
+    <!-- Phần xử lý lỗi từ SignUpHandle -> SignUp -->
     <?php
     if (isset($_GET["signup"]) && $_GET["signup"] == "success") {
         echo '<div class="message success">Đăng ký tài khoản thành công!</div>';
@@ -59,7 +59,7 @@
         echo '</div>';
     }
     ?>
-
+    <!-- Form hiển thị cho người dùng -->
     <form action="SignUpHandle.php" method="POST" enctype="multipart/form-data">
         <div class="form-group">
             <label class="form-label">Họ tên</label>
@@ -97,6 +97,7 @@
                 required
                 class="form-input">
         </div>
+        <!-- Phần Avatar của người dùng -->
         <div class="form-group">
             <label class="form-label" for="avatar">Ảnh đại diện</label>
             <input
@@ -133,6 +134,15 @@
                     Hiện </span>
             </div>
         </div>
+        <!-- Phần người giới thiệu -->
+        <div class="form-group">
+            <label class="form-label">Người giới thiệu</label>
+            <input
+                type="email"
+                name="referrer"
+                placeholder="Nhập email người giới thiệu"
+                class="form-input">
+        </div>
         <button type="submit" class="submit-button">
             Đăng ký
         </button>
@@ -141,6 +151,7 @@
         </div>
     </form>
 </body>
+<!-- Phần xử lý Hiện, Ẩn của Mật khẩu, Avatar (File) -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 

@@ -7,7 +7,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $phone = $_POST["phone"];
     $password = $_POST["password"];
     $confirmpassword = $_POST["confirmpassword"];
-
+    $referrerEmail = $_POST['referrer'] ?? null;
     $roleId = 2;
 
     $avatar_path = null;
@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             die();
         }
     }
-
+    // Phần xử lý lỗi để gửi về SignUp.
     $errors = [];
 
     if (empty($fullname) || empty($username) || empty($email) || empty($phone) || empty($password) || empty($confirmpassword)) {
@@ -79,11 +79,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header("Location: ./SignUp.php?error=" . implode(",", $errors));
         die();
     }
-
+    // Mã hóa mật khẩu.
     $hashedPwd = password_hash($password, PASSWORD_DEFAULT);
-
+    // Phần xử lý người giới thiệu
+    $referrerId = null;
+    if ($referrerEmail) {
+        try {
+            $query_referrer = "SELECT UserId FROM users WHERE Email = :referrerEmail;";
+            $stmt_referrer = $pdo->prepare($query_referrer);
+            $stmt_referrer->bindParam(":referrerEmail", $referrerEmail);
+            $stmt_referrer->execute();
+            $referrer = $stmt_referrer->fetch(PDO::FETCH_ASSOC);
+            if ($referrer) {
+                $referrerId = $referrer['UserId'];
+            }
+        } catch (PDOException $e) {
+            error_log("Referrer query error: " . $e->getMessage());
+        }
+    }
+    // Phần Insert dữ liệu vào database
     try {
-        $query = "INSERT INTO users (FullName, UserName, Password, Email, Phone, Avatar, RoleId) VALUES (:fullname, :username, :hashedPassword, :email, :phone, :avatar, :roleId);";
+        $query = "INSERT INTO users (FullName, UserName, Password, Email, Phone, Avatar, RoleId, ReferrerId) VALUES (:fullname, :username, :hashedPassword, :email, :phone, :avatar, :roleId, :referrerId);";
         $stmt = $pdo->prepare($query);
 
         $stmt->bindParam(":fullname", $fullname);
@@ -93,7 +109,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bindParam(":phone", $phone);
         $stmt->bindParam(":avatar", $avatar_path);
         $stmt->bindParam(":roleId", $roleId);
-
+        $stmt->bindParam(":referrerId", $referrerId, PDO::PARAM_INT);
         $stmt->execute();
 
         $pdo = null;
