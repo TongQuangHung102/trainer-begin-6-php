@@ -9,7 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $confirmpassword = $_POST["confirmpassword"];
     $referrerEmail = $_POST['referrer'] ?? null;
     $roleId = 2;
-
+    // Phần xử lý file ảnh
     $avatar_path = null;
 
     if (isset($_FILES["avatar"]) && $_FILES["avatar"]["error"] == UPLOAD_ERR_OK) {
@@ -32,15 +32,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     // Phần xử lý lỗi để gửi về SignUp.
     $errors = [];
-
-    if (empty($fullname) || empty($username) || empty($email) || empty($phone) || empty($password) || empty($confirmpassword)) {
-        $errors[] = "emptyfields";
-    }
-
     if ($password !== $confirmpassword) {
         $errors[] = "passwordmismatch";
     }
-
+    if (!empty($phone)) {
+        $vietnam_phone_regex = '/^(0|\+84)(3|5|7|8|9)[0-9]{8}$/';
+        if (!preg_match($vietnam_phone_regex, $phone)) {
+            $errors[] = "invalidphoneformat";
+        }
+    }
     try {
         require_once "./includes/dbh.inc.php";
 
@@ -73,14 +73,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header("Location: ./SignUp.php?error=dbconnection");
         die();
     }
-
-    if (!empty($errors)) {
-
-        header("Location: ./SignUp.php?error=" . implode(",", $errors));
-        die();
-    }
-    // Mã hóa mật khẩu.
-    $hashedPwd = password_hash($password, PASSWORD_DEFAULT);
     // Phần xử lý người giới thiệu
     $referrerId = null;
     if ($referrerEmail) {
@@ -92,11 +84,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $referrer = $stmt_referrer->fetch(PDO::FETCH_ASSOC);
             if ($referrer) {
                 $referrerId = $referrer['UserId'];
+            } else {
+                $errors[] = "invalidreferrer";
             }
         } catch (PDOException $e) {
             error_log("Referrer query error: " . $e->getMessage());
         }
     }
+    if (!empty($errors)) {
+
+        header("Location: ./SignUp.php?error=" . implode(",", $errors));
+        die();
+    }
+    // Mã hóa mật khẩu.
+    $hashedPwd = password_hash($password, PASSWORD_DEFAULT);
+
     // Phần Insert dữ liệu vào database
     try {
         $query = "INSERT INTO users (FullName, UserName, Password, Email, Phone, Avatar, RoleId, ReferrerId) VALUES (:fullname, :username, :hashedPassword, :email, :phone, :avatar, :roleId, :referrerId);";
