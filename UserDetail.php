@@ -10,9 +10,6 @@ if (isset($_GET['status'])) {
         $message = '<p class="success-message">Cập nhật thông tin người dùng thành công!</p>';
     } elseif ($_GET['status'] === 'error') {
         $message = '<p class="error-message">Có lỗi xảy ra khi cập nhật thông tin người dùng.</p>';
-        if (isset($_GET['msg'])) {
-            $message .= ' ' . htmlspecialchars($_GET['msg']);
-        }
     }
 }
 
@@ -86,6 +83,13 @@ if ($userId > 0) {
                     <?php else: ?>
                         <img src="./uploads/default_avatar.png" alt="Default Avatar" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; display: block; margin-bottom: 10px;">
                     <?php endif; ?>
+                    <input
+                        type="file"
+                        id="avatarupdate"
+                        name="avatarupdate"
+                        accept="image/*"
+                        class="form-input">
+                    <img id="avatarupdate-preview" src="#" alt="Ảnh đại diện" style="max-width: 150px; max-height: 150px; margin-top: 10px; display: none;">
                 </div>
 
                 <div class="form-group">
@@ -167,5 +171,25 @@ if ($userId > 0) {
         <?php endif; ?>
     </div>
 </body>
+<script>
+    const avatarInput = document.getElementById('avatarupdate');
+    const avatarPreview = document.getElementById('avatarupdate-preview');
+
+    if (avatarInput) {
+        avatarInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    avatarPreview.src = e.target.result;
+                    avatarPreview.style.display = 'block';
+                };
+                reader.readAsDataURL(this.files[0]);
+            } else {
+                avatarPreview.src = '#';
+                avatarPreview.style.display = 'none';
+            }
+        });
+    }
+</script>
 
 </html>

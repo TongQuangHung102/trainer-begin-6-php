@@ -1,3 +1,4 @@
+/* -----------------SignUp---------------- */
 body {
     display: flex;
     flex-direction: column;
@@ -40,7 +41,7 @@ form {
 
 .form-input {
     width: 100%;
-    padding: 10px 18px;
+    padding: 10px 10px;
     border: 1px solid #ced4da;
     border-radius: 6px;
     font-size: 1em;
@@ -110,40 +111,18 @@ input[type='file'] {
     text-decoration: underline;
 }
 
-@media (max-width: 600px) {
-    form {
-        margin: 20px;
-        padding: 25px;
-    }
-
-    h3 {
-        font-size: 1.8em;
-    }
-
-    .submit-button {
-        padding: 12px 20px;
-        font-size: 1em;
-    }
-}
-
 .password-input-container {
     position: relative;
     width: 100%;
 }
 
-.password-input-container .form-input {
-    padding-right: 40px;
-}
-
 .toggle-password {
     position: absolute;
-    right: 15px;
+    right: 30px;
     top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
     color: #6c757d;
-    font-size: 1.2em;
-    transition: color 0.2s ease-in-out;
 }
 
 .toggle-password:hover {
@@ -166,6 +145,7 @@ input[type='file'] {
     color: #721c24;
     border: 1px solid #f5c6cb;
 }
+/* ---------------UserList------------ */
 .user-list {
     display: flex;
     flex-direction: column;
@@ -348,6 +328,7 @@ input[type='file'] {
     padding: 0 15px;
 }
 
+/* ---------------UserDetail------------ */
 .form-group {
     margin-bottom: 15px;
     width: 100%;
