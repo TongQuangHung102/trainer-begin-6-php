@@ -92,7 +92,7 @@
                 class="form-input">
         </div>
         <div class="form-group">
-            <label class="form-label">Phone</label>
+            <label class="form-label">Số điện thoại</label>
             <input
                 type="text"
                 name="phone"

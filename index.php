@@ -115,10 +115,11 @@ $total_pages = ceil($total_users / $limit);
             </div>
         </div>
         <div class="user-row user-header">
+            <div>UserID</div>
             <div>Avatar</div>
-            <div>Full Name</div>
-            <div>Referrer</div>
-            <div>Joined</div>
+            <div>Họ tên</div>
+            <div>Người giới thiệu</div>
+            <div>Ngày tham gia</div>
             <div>Hành động</div>
         </div>
 
@@ -129,6 +130,7 @@ $total_pages = ceil($total_users / $limit);
         <?php else: ?>
             <?php foreach ($users as $user): ?>
                 <div class="user-row">
+                    <div><?= htmlspecialchars($user['UserId']) ?></div>
                     <div>
                         <?php if (!empty($user['Avatar'])): ?>
                             <img src="<?= htmlspecialchars($user['Avatar']) ?>" alt="Avatar của <?= htmlspecialchars($user['UserName']) ?>" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
@@ -139,7 +141,12 @@ $total_pages = ceil($total_users / $limit);
                     <div><?= htmlspecialchars($user['FullName']) ?></div>
                     <div><?= htmlspecialchars($user['ReferrerEmail'] ?: 'Không có') ?></div>
                     <div><?= htmlspecialchars($user['JoinedDate']) ?></div>
-                    <div><button class="buttonEdit">Chi tiết</button><button class="buttonDel">Xóa</button></div>
+                    <div>
+                        <a href="UserDetail.php?id=<?= htmlspecialchars($user['UserId']) ?>">
+                            <button class="buttonEdit">Chi tiết</button>
+                        </a>
+                        <button class="buttonDel">Xóa</button>
+                    </div>
                 </div>
             <?php endforeach; ?>
         <?php endif; ?>
