@@ -11,7 +11,8 @@ if (isset($_GET['status'])) {
     if ($_GET['status'] === 'success') {
         $message = '<p class="success-message">Cập nhật thông tin người dùng thành công!</p>';
     } elseif ($_GET['status'] === 'error') {
-        $message = '<p class="error-message">Có lỗi xảy ra khi cập nhật thông tin người dùng. ' . (isset($_GET['msg']) ? htmlspecialchars($_GET['msg']) : '') . '</p>';
+        // (isset($_GET['msg']) ? htmlspecialchars($_GET['msg']) : '') .
+        $message = '<p class="error-message">Có lỗi xảy ra khi cập nhật thông tin người dùng. </p>';
     }
 }
 

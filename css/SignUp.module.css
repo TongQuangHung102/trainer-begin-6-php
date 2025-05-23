@@ -39,8 +39,7 @@ form {
 .form-label {
     display: block;
     margin-bottom: 8px;
-    font-weight: 600;
-    color: #495057;
+    font-weight: bold;
     font-size: 0.95em;
 }
 

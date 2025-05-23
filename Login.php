@@ -12,15 +12,32 @@
 
 <body>
     <h5 class="page-title">Đăng nhập</h5>
-    <form action="SignUpHandle.php" method="POST" enctype="multipart/form-data" class="login-form">
+    <?php
+    session_start();
+    if (isset($_SESSION['error_message'])) {
+        echo '<p class="message error-message">' . htmlspecialchars($_SESSION['error_message']) . '</p>';
+        unset($_SESSION['error_message']);
+    }
+
+
+    if (isset($_SESSION['success_message'])) {
+        echo '<p class="message success-message">' . htmlspecialchars($_SESSION['success_message']) . '</p>';
+        unset($_SESSION['success_message']);
+    }
+    ?>
+    <form action="LoginHandle.php" method="POST" enctype="multipart/form-data" class="login-form">
         <div class="form-control">
             <label class="form-label">Tên đăng nhập (Email)</label>
             <input
                 type="text"
-                name="username"
+                name="usernameoremail"
                 placeholder="Nhập tên đăng nhập hoặc email"
                 required
-                class="form-input">
+                class="form-input"
+                value="<?php
+                        echo htmlspecialchars($_SESSION['old_usernameoremail'] ?? '');
+                        unset($_SESSION['old_usernameoremail']);
+                        ?>">
         </div>
         <div class="form-control">
             <label class="form-label" for="password">Mật khẩu</label>

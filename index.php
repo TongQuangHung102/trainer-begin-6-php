@@ -1,7 +1,8 @@
 <?php
+session_start();
 require_once 'includes/dbh.inc.php';
-
-
+// $currentUserRoleId = isset($_SESSION['user_role_id']) ?? 0;
+$currentUserRoleId = $_SESSION['user_role_id'] ?? 0;
 $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 10;
 if (!in_array($limit, [10, 20, 50, 100])) {
     $limit = 10;
@@ -77,6 +78,11 @@ $total_pages = ceil($total_users / $limit);
 
     <div class="user-list">
         <h5>Danh sách người dùng</h5>
+        <?php if (isset($_SESSION['user_id'])): ?>
+            <a href="LogOutHandle.php" class="logout-button">Đăng xuất</a>
+        <?php else: ?>
+            <a href="Login.php" class="loginguest-button">Đăng nhập</a>
+        <?php endif; ?>
 
         <div class="controls-container">
             <div class="pagination-controls">
@@ -145,7 +151,11 @@ $total_pages = ceil($total_users / $limit);
                         <a href="UserDetail.php?id=<?= htmlspecialchars($user['UserId']) ?>">
                             <button class="buttonEdit">Chi tiết</button>
                         </a>
-                        <button class="buttonDel">Xóa</button>
+                        <?php
+                        if ($currentUserRoleId == 3 || $currentUserRoleId == 4):
+                        ?>
+                            <button class="buttonDel">Xóa</button>
+                        <?php endif; ?>
                     </div>
                 </div>
             <?php endforeach; ?>

@@ -22,12 +22,7 @@ body {
 }
 
 .login-form {
-    background-color: rgba(
-        255,
-        255,
-        255,
-        0.9
-    ); /* Semi-transparent white background */
+    background-color: rgba(255, 255, 255, 0.9);
     padding: 30px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -138,4 +133,29 @@ body {
 }
 .password-toggle:hover {
     color: #007bff;
+}
+
+.message {
+    padding: 10px;
+    margin-top: -10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    text-align: center;
+
+    max-width: 400px;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 0.95em;
+}
+
+.error-message {
+    background-color: #f8d7da;
+    color: #dc3545;
+    border: 1px solid #f5c6cb;
+}
+
+.success-message {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
 }
