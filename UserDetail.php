@@ -1,5 +1,7 @@
 <?php
+
 require_once 'includes/dbh.inc.php';
+
 
 $userId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $message = '';
@@ -9,9 +11,10 @@ if (isset($_GET['status'])) {
     if ($_GET['status'] === 'success') {
         $message = '<p class="success-message">Cập nhật thông tin người dùng thành công!</p>';
     } elseif ($_GET['status'] === 'error') {
-        $message = '<p class="error-message">Có lỗi xảy ra khi cập nhật thông tin người dùng.</p>';
+        $message = '<p class="error-message">Có lỗi xảy ra khi cập nhật thông tin người dùng. ' . (isset($_GET['msg']) ? htmlspecialchars($_GET['msg']) : '') . '</p>';
     }
 }
+
 
 if ($userId > 0) {
 
@@ -33,6 +36,7 @@ if ($userId > 0) {
     $stmt->execute();
     $userDetail = $stmt->fetch(PDO::FETCH_ASSOC);
 
+
     if (!$userDetail) {
         header("Location: index.php?status=error&msg=" . urlencode('Không tìm thấy người dùng.'));
         exit();
@@ -43,6 +47,7 @@ if ($userId > 0) {
     $rolesStmt = $pdo->query($rolesSql);
     $allRoles = $rolesStmt->fetchAll(PDO::FETCH_ASSOC);
 } else {
+
     header("Location: index.php?status=error&msg=" . urlencode('ID người dùng không hợp lệ.'));
     exit();
 }
@@ -61,14 +66,16 @@ if ($userId > 0) {
 
 <body>
     <div class="user-detail-container">
-        <?php if ($userDetail): ?>
+        <?php if ($userDetail):
+        ?>
             <h5>Cập nhật thông tin người dùng</h5>
 
-            <?php if (!empty($message)) : ?>
+            <?php if (!empty($message)) :
+            ?>
                 <?= $message ?>
             <?php endif; ?>
 
-            <form action="UserDetailHandle.php" method="POST" class="user-update-form">
+            <form action="UserDetailHandle.php" method="POST" class="user-update-form" enctype="multipart/form-data">
                 <input type="hidden" name="userId" value="<?= htmlspecialchars($userDetail['UserId']) ?>">
 
                 <div class="form-group">
@@ -77,19 +84,20 @@ if ($userId > 0) {
                 </div>
 
                 <div class="form-group">
-                    <label for="avatar">Avatar:</label>
-                    <?php if (!empty($userDetail['Avatar'])): ?>
+                    <label for="avatarupdate">Avatar:</label>
+                    <?php if (!empty($userDetail['Avatar'])):
+                    ?>
                         <img src="<?= htmlspecialchars($userDetail['Avatar']) ?>" alt="Avatar" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; display: block; margin-bottom: 10px;">
-                    <?php else: ?>
+                    <?php else:
+                    ?>
                         <img src="./uploads/default_avatar.png" alt="Default Avatar" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; display: block; margin-bottom: 10px;">
                     <?php endif; ?>
                     <input
                         type="file"
                         id="avatarupdate"
-                        name="avatarupdate"
-                        accept="image/*"
+                        name="avatarupdate" accept="image/*"
                         class="form-input">
-                    <img id="avatarupdate-preview" src="#" alt="Ảnh đại diện" style="max-width: 150px; max-height: 150px; margin-top: 10px; display: none;">
+                    <img id="avatarupdate-preview" src="#" alt="Ảnh đại diện mới" style="max-width: 150px; max-height: 150px; margin-top: 10px; display: none;">
                 </div>
 
                 <div class="form-group">
@@ -163,33 +171,35 @@ if ($userId > 0) {
                 <button type="submit" name="update_user" class="submit-button">Lưu thay đổi</button>
                 <a href="index.php" class="back-button">Quay lại danh sách</a>
             </form>
-        <?php else: ?>
+        <?php else:
+        ?>
             <p>Không tìm thấy thông tin người dùng.</p>
             <div class="back-button">
                 <a href="index.php">Quay lại danh sách</a>
             </div>
         <?php endif; ?>
     </div>
-</body>
-<script>
-    const avatarInput = document.getElementById('avatarupdate');
-    const avatarPreview = document.getElementById('avatarupdate-preview');
 
-    if (avatarInput) {
-        avatarInput.addEventListener('change', function() {
-            if (this.files && this.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    avatarPreview.src = e.target.result;
-                    avatarPreview.style.display = 'block';
-                };
-                reader.readAsDataURL(this.files[0]);
-            } else {
-                avatarPreview.src = '#';
-                avatarPreview.style.display = 'none';
-            }
-        });
-    }
-</script>
+    <script>
+        const avatarInput = document.getElementById('avatarupdate');
+        const avatarPreview = document.getElementById('avatarupdate-preview');
+
+        if (avatarInput) {
+            avatarInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        avatarPreview.src = e.target.result;
+                        avatarPreview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(this.files[0]);
+                } else {
+                    avatarPreview.src = '#';
+                    avatarPreview.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
 
 </html>
