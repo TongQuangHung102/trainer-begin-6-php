@@ -60,7 +60,7 @@ if ($userId > 0) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cập nhật thông tin người dùng</title>
-    <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="./css/UserDetail.module.css">
     <link rel="stylesheet" href="./css/reset.css">
 </head>
 
@@ -168,7 +168,7 @@ if ($userId > 0) {
                     <textarea id="description" name="description"><?= htmlspecialchars($userDetail['Description']) ?></textarea>
                 </div>
 
-                <button type="submit" name="update_user" class="submit-button">Lưu thay đổi</button>
+                <button type="submit" name="update_user" class="submit-button">Lưu</button>
                 <a href="index.php" class="back-button">Quay lại danh sách</a>
             </form>
         <?php else:
