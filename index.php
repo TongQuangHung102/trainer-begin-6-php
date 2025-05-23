@@ -67,7 +67,7 @@ $total_pages = ceil($total_users / $limit);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="./css/UserList.module.css">
     <link rel="stylesheet" href="./css/reset.css">
     <title>HomePage</title>
 
