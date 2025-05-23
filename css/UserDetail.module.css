@@ -183,3 +183,33 @@ input[type='file'] {
     color: #0056b3;
     text-decoration: underline;
 }
+/* Khi chưa đăng nhập */
+.user-info-limited {
+    padding: 15px;
+    border-top: 1px solid #eee;
+    margin-top: 20px;
+    background-color: white;
+    border-radius: 10px;
+}
+.info-message {
+    background-color: #e2f0ff;
+    border: 1px solid #b3d7ff;
+    padding: 15px 25px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    text-align: center;
+    font-size: 1.1em;
+    line-height: 1.5;
+    box-shadow: 0 2px 5px rgba(0, 123, 255, 0.1);
+}
+
+.info-message a {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.info-message a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
