@@ -4,7 +4,6 @@ require_once 'includes/dbh.inc.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_user'])) {
     $userId = filter_input(INPUT_POST, 'userId', FILTER_VALIDATE_INT);
 
-
     $errors = [];
 
 
@@ -37,9 +36,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_user'])) {
         $errors[] = 'invalidrole';
     }
 
-    if ($birthday >= date("Y-m-d")) {
+    if (!empty($birthday) && $birthday >= date("Y-m-d")) {
         $errors[] = 'invalidbirthday';
     }
+
 
     if (!empty($phone)) {
         $vietnam_phone_regex = '/^(0|\+84)(3|5|7|8|9)[0-9]{8}$/';
@@ -47,18 +47,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_user'])) {
             $errors[] = "invalidphoneformat";
         }
     }
+
     $avatar_path = null;
+    $currentAvatarPath = null;
+
+    if ($userId > 0) {
+        try {
+            $stmtCurrentAvatar = $pdo->prepare("SELECT Avatar FROM users WHERE UserId = :userId");
+            $stmtCurrentAvatar->bindParam(':userId', $userId, PDO::PARAM_INT);
+            $stmtCurrentAvatar->execute();
+            $currentAvatarPath = $stmtCurrentAvatar->fetchColumn();
+        } catch (PDOException $e) {
+
+            error_log("Database error fetching current avatar for user ID " . $userId . ": " . $e->getMessage());
+        }
+    }
 
 
     if (isset($_FILES["avatarupdate"]) && $_FILES["avatarupdate"]["error"] == UPLOAD_ERR_OK) {
         $target_dir = "uploads/";
-        $target_file = $target_dir . basename($_FILES["avatarupdate"]["name"]);
-        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+        $file_extension = strtolower(pathinfo($_FILES["avatarupdate"]["name"], PATHINFO_EXTENSION));
+        $file_name = uniqid('avatar_') . '.' . $file_extension;
+        $target_file = $target_dir . $file_name;
+
 
         $allowed_types = array("jpg", "jpeg", "png", "gif");
-        if (in_array($imageFileType, $allowed_types)) {
+
+
+        if (in_array($file_extension, $allowed_types)) {
+
             if (move_uploaded_file($_FILES["avatarupdate"]["tmp_name"], $target_file)) {
                 $avatar_path = $target_file;
+
+
+                if ($currentAvatarPath && file_exists($currentAvatarPath) && basename($currentAvatarPath) !== 'default_avatar.png') {
+                    if (!unlink($currentAvatarPath)) {
+                        error_log("Failed to delete old avatar: " . $currentAvatarPath);
+                    }
+                }
             } else {
                 $errors[] = "avataruploadfailed";
             }
@@ -66,6 +92,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_user'])) {
             $errors[] = "invalidavatartype";
         }
     }
+
+
     try {
 
         $query_username = "SELECT UserId FROM users WHERE UserName = :username AND UserId != :userId;";
@@ -115,7 +143,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_user'])) {
 
 
         if (!empty($errors)) {
-            header("Location: UserDetail.php?id=" . $userId . "&status=error&msg=" . urlencode(implode(",", $errors)));
+
+            if (in_array('ID người dùng không hợp lệ.', $errors)) {
+                header("Location: index.php?status=error&msg=" . urlencode(implode(",", $errors)));
+            } else {
+                header("Location: UserDetail.php?id=" . $userId . "&status=error&msg=" . urlencode(implode(",", $errors)));
+            }
             exit();
         }
 
@@ -125,21 +158,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_user'])) {
                             UserName = :userName,
                             Email = :email,
                             Phone = :phone,
-                            Avatar = :avatarupdate,
                             Birthday = :birthday,
                             Gender = :gender,
                             Description = :description,
                             RoleId = :roleId,
-                            ReferrerId = :referrerId
-                          WHERE UserId = :userId";
+                            ReferrerId = :referrerId";
+
+
+        if ($avatar_path !== null) {
+            $updateSql .= ", Avatar = :avatar_new_path";
+        }
+
+        $updateSql .= " WHERE UserId = :userId";
 
         $updateStmt = $pdo->prepare($updateSql);
+
 
         $updateStmt->bindParam(':fullName', $fullName);
         $updateStmt->bindParam(':userName', $userName);
         $updateStmt->bindParam(':email', $email);
         $updateStmt->bindParam(':phone', $phone);
-        $updateStmt->bindParam(":avatarupdate", $avatar_path);
         $updateStmt->bindParam(':birthday', $birthday);
         $updateStmt->bindParam(':gender', $gender);
         $updateStmt->bindParam(':description', $description);
@@ -147,14 +185,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_user'])) {
         $updateStmt->bindParam(':referrerId', $actualReferrerId, PDO::PARAM_INT);
         $updateStmt->bindParam(':userId', $userId, PDO::PARAM_INT);
 
+
+        if ($avatar_path !== null) {
+            $updateStmt->bindParam(':avatar_new_path', $avatar_path);
+        }
+
+
         if ($updateStmt->execute()) {
+
             header("Location: UserDetail.php?id=" . $userId . "&status=success");
             exit();
         } else {
+
+            $errorInfo = $updateStmt->errorInfo();
+            error_log("PDO Statement Execute Error: " . $errorInfo[2]);
+
             header("Location: UserDetail.php?id=" . $userId . "&status=error&msg=" . urlencode('dbqueryfailed_update'));
             exit();
         }
     } catch (PDOException $e) {
+
         error_log("Database error during user update: " . $e->getMessage());
         header("Location: UserDetail.php?id=" . $userId . "&status=error&msg=" . urlencode('dbconnection'));
         exit();
