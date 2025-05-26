@@ -12,8 +12,10 @@
 
 <body>
     <h5 class="page-title">Đăng nhập</h5>
+    <!-- Hiển thị message khi đăng nhập (Thành công, Thất bại) -->
     <?php
     session_start();
+    //isset() hàm kiểm tra biến có tồn tại và không phải là NULL hay không.
     if (isset($_SESSION['error_message'])) {
         echo '<p class="message error-message">' . htmlspecialchars($_SESSION['error_message']) . '</p>';
         unset($_SESSION['error_message']);
@@ -24,7 +26,9 @@
         echo '<p class="message success-message">' . htmlspecialchars($_SESSION['success_message']) . '</p>';
         unset($_SESSION['success_message']);
     }
-    ?>
+    ?>  
+    <!-- enctype="multipart/form-data" => Có input là file (chia dữ liệu của form thành nhiều phần (parts) riêng biệt. 
+    Mỗi phần đại diện cho một trường input trong form.) -->
     <form action="LoginHandle.php" method="POST" enctype="multipart/form-data" class="login-form">
         <div class="form-control">
             <label class="form-label">Tên đăng nhập (Email)</label>
