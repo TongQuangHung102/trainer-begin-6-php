@@ -113,7 +113,7 @@ if ($userId > 0) {
                         <?php if (!empty($userDetail['Avatar'])): ?>
                             <img src="<?= htmlspecialchars($userDetail['Avatar']) ?>" alt="Avatar" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; display: block; margin-bottom: 10px;">
                         <?php else: ?>
-                            <img src="./uploads/default_avatar.png" alt="Default Avatar" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; display: block; margin-bottom: 10px;">
+                            <img src="images/2.jpg" alt="Default Avatar" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; display: block; margin-bottom: 10px;">
                         <?php endif; ?>
                     </div>
                     <div class="form-group">
@@ -137,7 +137,7 @@ if ($userId > 0) {
                         <?php if (!empty($userDetail['Avatar'])): ?>
                             <img src="<?= htmlspecialchars($userDetail['Avatar']) ?>" alt="Avatar" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; display: block; margin-bottom: 10px;">
                         <?php else: ?>
-                            <img src="./uploads/default_avatar.png" alt="Default Avatar" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; display: block; margin-bottom: 10px;">
+                            <img src="images/2.jpg" alt="Default Avatar" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; display: block; margin-bottom: 10px;">
                         <?php endif; ?>
                         <input
                             type="file"

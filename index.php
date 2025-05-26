@@ -141,7 +141,7 @@ $total_pages = ceil($total_users / $limit);
                         <?php if (!empty($user['Avatar'])): ?>
                             <img src="<?= htmlspecialchars($user['Avatar']) ?>" alt="Avatar của <?= htmlspecialchars($user['UserName']) ?>" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
                         <?php else: ?>
-                            <img src="./uploads/default_avatar.png">
+                            <img src="images/2.jpg">
                         <?php endif; ?>
                     </div>
                     <div><?= htmlspecialchars($user['FullName']) ?></div>
@@ -154,7 +154,9 @@ $total_pages = ceil($total_users / $limit);
                         <?php
                         if ($currentUserRoleId == 3 || $currentUserRoleId == 4):
                         ?>
-                            <button class="buttonDel">Xóa</button>
+                            <a href="DeleteUserHandle.php?id=<?= htmlspecialchars($user['UserId']) ?>" onclick="return confirm('Bạn có chắc muốn xóa người dùng này?')">
+                                <button class="buttonDel">Xóa</button>
+                            </a>
                         <?php endif; ?>
                     </div>
                 </div>
