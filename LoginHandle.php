@@ -1,10 +1,13 @@
 <?php
 session_start();
+// Thiết lập múi giờ mặc định => 'Asia/Ho_Chi_Minh' (Múi giờ chuẩn của Việt Nam)
 date_default_timezone_set('Asia/Ho_Chi_Minh');
 require_once "includes/dbh.inc.php";
-
+//  Số lần đăng nhập sai tối đa trước khi tài khoản bị khóa.
 const MAX_FAILED_ATTEMPTS = 3;
+// Thời gian tài khoản bị khóa sau khi đạt số lần đăng nhập sai tối đa
 const LOCKOUT_DURATION_SECONDS = 60;
+// Thời gian để reset lại số lần đăng nhập sai nếu lần thử sai gần nhất đã quá khoảng thời gian này
 const RESET_ATTEMPTS_TIME_SECONDS = 60;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -36,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $currentFailedAttempts = (int)$user['failed_login_attempts'];
         $lastFailedLoginTimestamp = $user['last_failed_login'] ? strtotime($user['last_failed_login']) : 0;
         $lockoutUntilTimestamp = $user['lockout_until'] ? strtotime($user['lockout_until']) : 0;
-
+        // Kiểm tra xem thời gian khóa tài khoản có còn hiệu lực
         if ($lockoutUntilTimestamp > time()) {
 
             $remainingTimeSeconds = $lockoutUntilTimestamp - time();
@@ -45,6 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: Login.php');
             exit();
         }
+        // Xác thực mật khẩu mã hóa
         if (password_verify($password, $user['Password'])) {
 
             $updateQuery = "UPDATE users SET failed_login_attempts = 0, last_failed_login = NULL, lockout_until = NULL WHERE UserId = :userId";
@@ -62,8 +66,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: index.php');
             exit();
         } else {
-
+            //Ví dụ: 2025-05-26 10:05:34
             $now = date('Y-m-d H:i:s');
+            // Kiểm tra xem đây có phải là lần đăng nhập sai đầu tiên của người dùng đó hay không.
             if ($lastFailedLoginTimestamp === 0 || (time() - $lastFailedLoginTimestamp) > RESET_ATTEMPTS_TIME_SECONDS) {
                 $newFailedAttempts = 1;
             } else {
@@ -73,9 +78,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $updateQuery = "UPDATE users SET failed_login_attempts = :attempts, last_failed_login = :now";
             $updateParams = [':attempts' => $newFailedAttempts, ':now' => $now];
 
-
+            //Kiểm tra xem số lần thử sai mới có đạt đến hoặc vượt quá số lần tối đa cho phép hay không.
             if ($newFailedAttempts >= MAX_FAILED_ATTEMPTS) {
-
+                
                 $lockoutTime = date('Y-m-d H:i:s', time() + LOCKOUT_DURATION_SECONDS);
                 $updateQuery .= ", lockout_until = :lockout_time";
                 $updateParams[':lockout_time'] = $lockoutTime;

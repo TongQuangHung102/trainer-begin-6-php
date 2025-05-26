@@ -9,7 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $confirmpassword = $_POST["confirmpassword"];
     $referrerEmail = $_POST['referrer'] ?? null;
     $roleId = 2;
-    // Phần xử lý file ảnh
+    // Phần xử lý file avatar
     $avatar_path = null;
 
     if (isset($_FILES["avatar"]) && $_FILES["avatar"]["error"] == UPLOAD_ERR_OK) {
